@@ -1,5 +1,7 @@
 {% extends "blog/base.html" %}
 
+{% load blog_tags %}
+
 {% block title %}Наш блог{% endblock %}
 
 {% block content %}
@@ -26,7 +28,7 @@
     <p class="date">
         Опубликовано {{ post.publish }} --- {{ post.author.first_name }} {{ post.author.last_name }}
     </p>
-    {{ post.body|truncatewords:30|linebreaks }}
+    {{ post.body|markdown|truncatewords:30 }}
   {% endfor %}
   {% include "pagination.html" with page=posts %}
 {% endblock %}
