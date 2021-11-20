@@ -3,10 +3,11 @@ from django.core.mail import send_mail
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count
+from django.contrib.postgres.search import SearchVector
 from taggit.models import Tag
 
 from .models import Post, Comment
-from .forms import EmailPostForm, CommentForm
+from .forms import EmailPostForm, CommentForm, SearchForm
 
 
 class PostListView(ListView):
@@ -90,9 +91,9 @@ def post_share(request, post_id):
             cd = form.cleaned_data
             # ... send email
             post_url = request.build_absolute_uri(post.get_absolute_url())
-            subject = f"{cd['name']} порекомендовал для прочтения "\
+            subject = f"{cd['name']} порекомендовал для прочтения " \
                       f"{post.title}"
-            message = f"Read {post.title} at {post_url}\n\n"\
+            message = f"Read {post.title} at {post_url}\n\n" \
                       f"{cd['name']}\'s comments: {cd['comments']}"
             send_mail(subject, message, 'admin@mymail.com', [cd['to']])
             sent = True
@@ -101,3 +102,21 @@ def post_share(request, post_id):
     return render(request, 'blog/post/share.html', {'post': post,
                                                     'form': form,
                                                     'sent': sent})
+
+
+def post_search(request):
+    form = SearchForm()
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results = Post.published.annotate(
+                search=SearchVector('title', 'body'),
+            ).filter(search=query)
+    return render(request,
+                  'blog/post/search.html',
+                  {'form': form,
+                   'query': query,
+                   'results': results})
