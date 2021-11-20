@@ -1,14 +1,18 @@
 asgiref==3.4.1
-backports.entry-points-selectable==1.1.0
+backports.entry-points-selectable==1.1.1
 certifi==2021.10.8
 charset-normalizer==2.0.7
 conda==4.3.16
 distlib==0.3.3
 Django==3.2.9
+django-taggit==1.5.1
 filelock==3.3.2
 idna==3.3
+importlib-metadata==4.8.2
+Markdown==3.3.6
 pipenv==2021.11.9
 platformdirs==2.4.0
+psycopg2-binary==2.9.2
 pycosat==0.6.3
 pytz==2021.3
 requests==2.26.0
@@ -19,3 +23,4 @@ sqlparse==0.4.2
 urllib3==1.26.7
 virtualenv==20.10.0
 virtualenv-clone==0.5.7
+zipp==3.6.0
